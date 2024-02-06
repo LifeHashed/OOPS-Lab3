@@ -1,0 +1,18 @@
+Merge Sort: 30 microseconds
+Bubble Sort: 1 microseconds
+Selection Sort: 1 microseconds
+Insertion Sort: 0 microseconds
+Heap Sort: 3 microseconds
+
+Merge Sort: 136 microseconds
+Bubble Sort: 73 microseconds
+Selection Sort: 54 microseconds
+Insertion Sort: 1 microseconds
+Heap Sort: 41 microseconds
+
+Merge Sort: 1150 microseconds
+Bubble Sort: 4822 microseconds
+Selection Sort: 5127 microseconds
+Insertion Sort: 15 microseconds
+Heap Sort: 577 microseconds
+
