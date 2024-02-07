@@ -1,48 +1,54 @@
 #include <iostream>
 using namespace std;
-#define MAX_SIZE 100
 
 class Queue {
 private:
-    int front, rear;
-    int array[MAX_SIZE];
+    int front, rear, size;
+    int *array;
 
 public:
-    Queue() : front(-1), rear(-1) {}
+    Queue(int maxSize) : front(-1), rear(-1), size(maxSize) {
+        array = new int[size];
+    }
+
+    ~Queue() {
+        delete[] array;
+    }
 
     void enqueue(int value) {
-        if (rear < MAX_SIZE - 1) {
-            if (front == -1) {
-                front = 0;
+        if ((rear + 1) % size != front) {
+            if (isEmpty()) {
+                front = rear = 0;
+            } else {
+                rear = (rear + 1) % size;
             }
-            array[++rear] = value;
+            array[rear] = value;
             cout << "Enqueued: " << value << endl;
         } else {
-            cout << "Queue overflow! Cannot enqueue more elements." << endl;
+            cout << "Queue is full! Cannot enqueue more elements." << endl;
         }
     }
 
     void dequeue() {
-        if (front <= rear && front != -1) {
-            cout << "Dequeued: " << array[front++] << endl;
-            if (front > rear) {
+        if (!isEmpty()) {
+            int removedValue = array[front];
+            if (front == rear) {
                 front = rear = -1;
+            } else {
+                front = (front + 1) % size;
             }
+            cout << "Dequeued: " << removedValue << endl;
         } else {
-            cout << "Queue underflow! Cannot dequeue from an empty queue." << endl;
+            cout << "Queue is empty! Cannot dequeue from an empty queue." << endl;
         }
     }
 
-    void initialize() {
-        front = rear = -1;
-    }
-
     bool isEmpty() {
-        return front == -1;
+        return front == -1 && rear == -1;
     }
 
     bool isFull() {
-        return rear == MAX_SIZE - 1;
+        return (rear + 1) % size == front;
     }
 
     void display() {
@@ -50,27 +56,37 @@ public:
             cout << "Queue is empty." << endl;
         } else {
             cout << "Queue elements: ";
-            for (int i = front; i <= rear; ++i) {
+            int i = front;
+            do {
                 cout << array[i] << " ";
-            }
+                i = (i + 1) % size;
+            } while (i != (rear + 1) % size);
             cout << endl;
         }
     }
 };
 
 int main() {
-    Queue queue;
+    int maxSize;
+    cout << "Enter the maximum size of the queue: ";
+    cin >> maxSize;
+
+    Queue queue(maxSize);
+
     int n, el;
     cout << "Enter Number of elements:" << endl;
     cin >> n;
-    for (int i=0; i<n; i++){
+    for (int i = 0; i < n; i++) {
         cout << "Enter element to be enqueued:" << endl;
         cin >> el;
         queue.enqueue(el);
     }
+
     queue.display();
     queue.dequeue();
     queue.display();
     cout << "Is queue empty? " << (queue.isEmpty() ? "Yes" : "No") << endl;
     cout << "Is queue full? " << (queue.isFull() ? "Yes" : "No") << endl;
+
+    return 0;
 }

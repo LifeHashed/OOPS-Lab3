@@ -5,11 +5,19 @@ using namespace std;
 class Stack {
 private:
     int top;
-    int array[MAX_SIZE];
+    int *array;
 
 public:
-    Stack() : top(-1) {}
+    Stack(int maxSize) : top(-1) {
+        array = new int[maxSize];
+    }
+
+    ~Stack() {
+        delete[] array;
+    }
+
     void push(int value) {
+        // Assuming that MAX_SIZE is now provided during stack creation
         if (top < MAX_SIZE - 1) {
             array[++top] = value;
             cout << "Pushed: " << value << endl;
@@ -52,18 +60,22 @@ public:
 };
 
 int main() {
-    Stack stack;
+    Stack stack(MAX_SIZE);
+
     int n, el;
     cout << "Enter Number of elements:" << endl;
     cin >> n;
-    for (int i=0; i<n; i++){
+    for (int i = 0; i < n; i++) {
         cout << "Enter element to be pushed:" << endl;
         cin >> el;
         stack.push(el);
     }
+
     stack.display();
     stack.pop();
     stack.display();
     cout << "Is stack empty? " << (stack.isEmpty() ? "Yes" : "No") << endl;
     cout << "Is stack full? " << (stack.isFull() ? "Yes" : "No") << endl;
+
+    return 0;
 }
