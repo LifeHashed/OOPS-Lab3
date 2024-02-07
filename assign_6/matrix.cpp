@@ -1,127 +1,158 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+using namespace std;
 
 class Matrix {
 private:
     int rows, cols;
-    std::vector<std::vector<int>> matrix;
+    int** matrix;
 
 public:
     Matrix(int rows, int cols) : rows(rows), cols(cols) {
-        allocate_space();
+        allocateSpace();
     }
 
-    void allocate_space() {
-        matrix.resize(rows, std::vector<int>(cols, 0));
+    ~Matrix() {
+        deallocateSpace();
     }
 
-    void read_matrix() {
-        std::cout << "Enter matrix elements row-wise:" << std::endl;
+    void allocateSpace() {
+        matrix = new int*[rows];
+        for (int i = 0; i < rows; ++i) {
+            matrix[i] = new int[cols];
+        }
+    }
+
+    void deallocateSpace() {
+        for (int i = 0; i < rows; ++i) {
+            delete[] matrix[i];
+        }
+        delete[] matrix;
+    }
+
+    void readMatrix() {
+        cout << "Enter matrix elements:" << endl;
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
-                std::cout << "Enter element at position (" << i + 1 << ", " << j + 1 << "): ";
-                std::cin >> matrix[i][j];
+                cout << "Enter element at position (" << i + 1 << "," << j + 1 << "): ";
+                cin >> matrix[i][j];
             }
         }
     }
 
-    void display_matrix() {
-        std::cout << "Matrix:" << std::endl;
+    void displayMatrix() const {
+        cout << "Matrix:" << endl;
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
-                std::cout << matrix[i][j] << " ";
+                cout << matrix[i][j] << " ";
             }
-            std::cout << std::endl;
+            cout << endl;
         }
     }
 
-    Matrix add_matrix(const Matrix& other) {
+    bool isSymmetric() {
+        if (rows == cols) {
+            Matrix transpose(rows, cols);
+            for (int i=0; i<rows; i++){
+                for (int j=0; j<rows; j++) {
+                    transpose.matrix[i][j] = matrix[j][i];
+                }
+            }
+            int flag=1;
+            for (int i=0; i<rows; i++){
+                for (int j=0; j<rows; j++) {
+                    if (transpose.matrix[i][j] != matrix[i][j]){
+                        flag=0;
+                        break;
+                    }
+                }
+            }
+            if (flag==1){
+                cout << "YES symmetric" << endl;
+            } else{
+                cout << "NOT symmetric" << endl;
+            }
+        } else{
+            cout << "Symmetricity is only for square matrices" << endl;
+        }
+    }
+
+    int isIden_Matrix(const Matrix& other) const {
+        int res=1;
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (matrix[i][j] != other.matrix[i][j]){
+                    res=0;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
+    Matrix addMatrix(const Matrix& other) const {
         Matrix result(rows, cols);
-
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < cols; ++j) {
                 result.matrix[i][j] = matrix[i][j] + other.matrix[i][j];
             }
         }
-
         return result;
     }
 
-    Matrix mult_matrix(const Matrix& other) {
-        if (cols != other.rows) {
-            std::cout << "Matrix multiplication not possible due to incompatible dimensions." << std::endl;
-            return Matrix(0, 0);
-        }
-
+    Matrix multiplyMatrix(const Matrix& other) const {
+        
         Matrix result(rows, other.cols);
-
         for (int i = 0; i < rows; ++i) {
             for (int j = 0; j < other.cols; ++j) {
+                result.matrix[i][j] = 0;
                 for (int k = 0; k < cols; ++k) {
                     result.matrix[i][j] += matrix[i][k] * other.matrix[k][j];
                 }
             }
         }
-
         return result;
     }
 
-    int det_matrix() {
-        if (rows != cols) {
-            std::cout << "Determinant calculation is only possible for square matrices." << std::endl;
+    int determinant() const {
+        if (rows == 1 && cols == 1) {
+            return (matrix[0][0]);
+        }
+        if (rows == 2 && cols == 2) {
+            return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]);
+        } else {
+            cerr << "Determinant calculation is supported only for 2x2 matrices." << endl;
             return 0;
         }
-
-        int det = 1;
-        std::vector<std::vector<int>> temp(matrix);
-
-        for (int i = 0; i < rows; ++i) {
-            // Finding pivot element
-            int pivot = i;
-            while (pivot < rows && temp[pivot][i] == 0) {
-                ++pivot;
-            }
-
-            if (pivot == rows) {
-                // No pivot element found, determinant is 0
-                det = 0;
-                break;
-            }
-
-            if (pivot != i) {
-                // Swap rows if pivot element is not in the current row
-                det *= -1; // Changing the sign when swapping rows
-                std::swap(temp[i], temp[pivot]);
-            }
-
-            det *= temp[i][i];
-
-            // Eliminate other elements in the current column
-            for (int j = i + 1; j < rows; ++j) {
-                int factor = temp[j][i] / temp[i][i];
-                for (int k = i; k < cols; ++k) {
-                    temp[j][k] -= factor * temp[i][k];
-                }
-            }
-        }
-
-        return det;
     }
 };
 
 int main() {
     int rows, cols;
-    std::cout << "Enter the number of rows and columns for the matrix: ";
-    std::cin >> rows >> cols;
-
+    cout << "Enter the number of rows for the matrix: ";
+    cin >> rows;
+    cout << "Enter the number of columns for the matrix: ";
+    cin >> cols;
     Matrix matrix1(rows, cols);
-    matrix1.read_matrix();
-
-    std::cout << "\nMatrix 1:" << std::endl;
-    matrix1.display_matrix();
-
-    int det = matrix1.det_matrix();
-    std::cout << "\nDeterminant of Matrix 1: " << det << std::endl;
-
-    return 0;
+    matrix1.readMatrix();
+    matrix1.displayMatrix();
+    Matrix matrix2(rows, cols);
+    matrix2.readMatrix();
+    matrix2.displayMatrix();
+    Matrix sumMatrix = matrix1.addMatrix(matrix2);
+    cout << "After addition:" << endl;
+    sumMatrix.displayMatrix();
+    Matrix productMatrix = matrix1.multiplyMatrix(matrix2);
+    cout << "After addition:" << endl;
+    productMatrix.displayMatrix();
+    cout << "Determinant of the first matrix: " << matrix1.determinant() << endl;
+    cout << "Determinant of the second  matrix: " << matrix2.determinant() << endl;
+    cout << "Symmetricity of first matrix: " << endl;
+    matrix1.isSymmetric();
+    cout << "Symmetricity of second matrix: " << endl;
+    matrix2.isSymmetric();
+    int res=matrix1.isIden_Matrix(matrix2);
+    if(res==0)
+    cout << "Matrices are not identical" << endl;
+    else
+    cout << "Matrices are identical" << endl;
 }

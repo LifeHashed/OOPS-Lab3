@@ -1,106 +1,69 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+using namespace std;
+#define MAX_SIZE 100
 
 class Stack {
 private:
-    int capacity;
-    std::vector<int> stack;
+    int top;
+    int array[MAX_SIZE];
 
 public:
-    Stack(int capacity) : capacity(capacity) {}
-
-    bool is_empty() {
-        return stack.empty();
-    }
-
-    bool is_full() {
-        return stack.size() == capacity;
-    }
-
-    void push(int data) {
-        if (is_full()) {
-            std::cout << "Stack overflow. Cannot push element." << std::endl;
+    Stack() : top(-1) {}
+    void push(int value) {
+        if (top < MAX_SIZE - 1) {
+            array[++top] = value;
+            cout << "Pushed: " << value << endl;
         } else {
-            stack.push_back(data);
-            std::cout << "Pushed " << data << " onto the stack." << std::endl;
+            cout << "Stack overflow! Cannot push more elements." << endl;
         }
     }
 
-    int pop() {
-        if (is_empty()) {
-            std::cout << "Stack underflow. Cannot pop element." << std::endl;
-            return -1;
+    void pop() {
+        if (top >= 0) {
+            cout << "Popped: " << array[top--] << endl;
         } else {
-            int data = stack.back();
-            stack.pop_back();
-            std::cout << "Popped " << data << " from the stack." << std::endl;
-            return data;
+            cout << "Stack underflow! Cannot pop from an empty stack." << endl;
         }
+    }
+
+    void initialize() {
+        top = -1;
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+
+    bool isFull() {
+        return top == MAX_SIZE - 1;
     }
 
     void display() {
-        if (is_empty()) {
-            std::cout << "Stack is empty." << std::endl;
+        if (isEmpty()) {
+            cout << "Stack is empty." << endl;
         } else {
-            std::cout << "Stack elements:" << std::endl;
-            for (int i = stack.size() - 1; i >= 0; --i) {
-                std::cout << stack[i] << std::endl;
+            cout << "Stack elements: ";
+            for (int i = 0; i <= top; ++i) {
+                cout << array[i] << " ";
             }
+            cout << endl;
         }
-    }
-
-    void clear() {
-        stack.clear();
-        std::cout << "Stack cleared." << std::endl;
     }
 };
 
 int main() {
-    int stack_capacity;
-    std::cout << "Enter the capacity of the stack: ";
-    std::cin >> stack_capacity;
-
-    Stack my_stack(stack_capacity);
-
-    int choice;
-    do {
-        std::cout << "\nMenu:\n";
-        std::cout << "1. Push\n";
-        std::cout << "2. Pop\n";
-        std::cout << "3. Display\n";
-        std::cout << "4. Clear Stack\n";
-        std::cout << "0. Exit\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-
-        switch (choice) {
-            case 1:
-                int data;
-                std::cout << "Enter the element to push: ";
-                std::cin >> data;
-                my_stack.push(data);
-                break;
-
-            case 2:
-                my_stack.pop();
-                break;
-
-            case 3:
-                my_stack.display();
-                break;
-
-            case 4:
-                my_stack.clear();
-                break;
-
-            case 0:
-                std::cout << "Exiting program.\n";
-                break;
-
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-        }
-    } while (choice != 0);
-
-    return 0;
+    Stack stack;
+    int n, el;
+    cout << "Enter Number of elements:" << endl;
+    cin >> n;
+    for (int i=0; i<n; i++){
+        cout << "Enter element to be pushed:" << endl;
+        cin >> el;
+        stack.push(el);
+    }
+    stack.display();
+    stack.pop();
+    stack.display();
+    cout << "Is stack empty? " << (stack.isEmpty() ? "Yes" : "No") << endl;
+    cout << "Is stack full? " << (stack.isFull() ? "Yes" : "No") << endl;
 }

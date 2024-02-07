@@ -1,110 +1,76 @@
-#include<iostream>
-#include<queue>
+#include <iostream>
+using namespace std;
+#define MAX_SIZE 100
 
 class Queue {
 private:
-    int capacity;
-    std::queue<int> q;
+    int front, rear;
+    int array[MAX_SIZE];
 
 public:
-    Queue(int capacity) : capacity(capacity) {}
+    Queue() : front(-1), rear(-1) {}
 
-    bool is_empty() {
-        return q.empty();
-    }
-
-    bool is_full() {
-        return q.size() == capacity;
-    }
-
-    void enqueue(int data) {
-        if (is_full()) {
-            std::cout << "Queue overflow. Cannot enqueue element." << std::endl;
+    void enqueue(int value) {
+        if (rear < MAX_SIZE - 1) {
+            if (front == -1) {
+                front = 0;
+            }
+            array[++rear] = value;
+            cout << "Enqueued: " << value << endl;
         } else {
-            q.push(data);
-            std::cout << "Enqueued " << data << " into the queue." << std::endl;
+            cout << "Queue overflow! Cannot enqueue more elements." << endl;
         }
     }
 
-    int dequeue() {
-        if (is_empty()) {
-            std::cout << "Queue underflow. Cannot dequeue element." << std::endl;
-            return -1;
+    void dequeue() {
+        if (front <= rear && front != -1) {
+            cout << "Dequeued: " << array[front++] << endl;
+            if (front > rear) {
+                front = rear = -1;
+            }
         } else {
-            int data = q.front();
-            q.pop();
-            std::cout << "Dequeued " << data << " from the queue." << std::endl;
-            return data;
+            cout << "Queue underflow! Cannot dequeue from an empty queue." << endl;
         }
+    }
+
+    void initialize() {
+        front = rear = -1;
+    }
+
+    bool isEmpty() {
+        return front == -1;
+    }
+
+    bool isFull() {
+        return rear == MAX_SIZE - 1;
     }
 
     void display() {
-        if (is_empty()) {
-            std::cout << "Queue is empty." << std::endl;
+        if (isEmpty()) {
+            cout << "Queue is empty." << endl;
         } else {
-            std::queue<int> tempQ = q;
-            std::cout << "Queue elements:" << std::endl;
-            while (!tempQ.empty()) {
-                std::cout << tempQ.front() << std::endl;
-                tempQ.pop();
+            cout << "Queue elements: ";
+            for (int i = front; i <= rear; ++i) {
+                cout << array[i] << " ";
             }
+            cout << endl;
         }
-    }
-
-    void clear() {
-        while (!q.empty()) {
-            q.pop();
-        }
-        std::cout << "Queue cleared." << std::endl;
     }
 };
 
 int main() {
-    int queue_capacity;
-    std::cout << "Enter the capacity of the queue: ";
-    std::cin >> queue_capacity;
-
-    Queue my_queue(queue_capacity);
-
-    int choice;
-    do {
-        std::cout << "\nMenu:\n";
-        std::cout << "1. Enqueue\n";
-        std::cout << "2. Dequeue\n";
-        std::cout << "3. Display\n";
-        std::cout << "4. Clear Queue\n";
-        std::cout << "0. Exit\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-
-        switch (choice) {
-            case 1:
-                int data;
-                std::cout << "Enter the element to enqueue: ";
-                std::cin >> data;
-                my_queue.enqueue(data);
-                break;
-
-            case 2:
-                my_queue.dequeue();
-                break;
-
-            case 3:
-                my_queue.display();
-                break;
-
-            case 4:
-                my_queue.clear();
-                break;
-
-            case 0:
-                std::cout << "Exiting program.\n";
-                break;
-
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-        }
-    } while (choice != 0);
-
-    return 0;
+    Queue queue;
+    int n, el;
+    cout << "Enter Number of elements:" << endl;
+    cin >> n;
+    for (int i=0; i<n; i++){
+        cout << "Enter element to be enqueued:" << endl;
+        cin >> el;
+        queue.enqueue(el);
+    }
+    queue.display();
+    queue.dequeue();
+    queue.display();
+    cout << "Is queue empty? " << (queue.isEmpty() ? "Yes" : "No") << endl;
+    cout << "Is queue full? " << (queue.isFull() ? "Yes" : "No") << endl;
 }
