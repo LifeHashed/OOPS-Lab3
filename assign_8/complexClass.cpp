@@ -78,16 +78,26 @@ std::ostream& operator<<(std::ostream& out, const Complex& complex) {
 }
 
 int main() {
-    Complex c1, c2;
-    std::cout << "Enter two complex numbers (real and imaginary parts):" << std::endl;
-    std::cin >> c1 >> c2;
+    double real1, imaginary1, real2, imaginary2;
 
+    std::cout << "Enter the real and imaginary parts of the first complex number: ";
+    std::cin >> real1 >> imaginary1;
+
+    std::cout << "Enter the real and imaginary parts of the second complex number: ";
+    std::cin >> real2 >> imaginary2;
+
+    // Creating complex numbers using the provided input
+    Complex c1(real1, imaginary1);
+    Complex c2(real2, imaginary2);
+
+    // Performing operations
     Complex sum = c1 + c2;
     Complex difference = c1 - c2;
     Complex product = c1 * c2;
     Complex quotient = c1 / c2;
     Complex conjugate = !c1;
 
+    // Displaying results
     std::cout << "Sum: " << sum << std::endl;
     std::cout << "Difference: " << difference << std::endl;
     std::cout << "Product: " << product << std::endl;
@@ -100,5 +110,6 @@ int main() {
     } else {
         std::cout << "The two complex numbers are not equal." << std::endl;
     }
+
     return 0;
 }

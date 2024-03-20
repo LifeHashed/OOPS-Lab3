@@ -137,11 +137,19 @@ std::ostream& operator<<(std::ostream& out, const Fraction& fraction) {
 
 
 int main() {
-    Fraction f1, f2;
-    std::cout << "Enter two fractions (numerator and denominator):" << std::endl;
-    std::cin >> f1 >> f2;
+    int num1, denom1, num2, denom2;
 
+    std::cout << "Enter the numerator and denominator of the first fraction: ";
+    std::cin >> num1 >> denom1;
 
+    std::cout << "Enter the numerator and denominator of the second fraction: ";
+    std::cin >> num2 >> denom2;
+
+    // Creating fraction objects using the provided input
+    Fraction f1(num1, denom1);
+    Fraction f2(num2, denom2);
+
+    // Performing operations
     Fraction sum = f1 + f2;
     Fraction difference = f1 - f2;
     Fraction product = f1 * f2;
@@ -149,6 +157,7 @@ int main() {
     Fraction normalizedF1 = *f1;
     Fraction normalizedF2 = *f2;
 
+    // Displaying results
     std::cout << "Sum: " << sum << std::endl;
     std::cout << "Difference: " << difference << std::endl;
     std::cout << "Product: " << product << std::endl;
@@ -162,7 +171,6 @@ int main() {
     } else {
         std::cout << "The two fractions are not equal." << std::endl;
     }
-
 
     // Testing less than and greater than
     if (f1 < f2) {

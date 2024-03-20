@@ -138,23 +138,22 @@ std::ostream& operator<<(std::ostream& out, const Set& set) {
 
 int main() {
     Set set1, set2;
+
     std::cout << "Enter elements for the first set:" << std::endl;
     std::cin >> set1;
-
 
     std::cout << "Enter elements for the second set:" << std::endl;
     std::cin >> set2;
 
-
+    // Performing set operations
     Set unionSet = set1 + set2;
     Set differenceSet = set1 - set2;
     Set intersectionSet = set1 * set2;
 
-
+    // Displaying results
     std::cout << "Union of sets: " << unionSet << std::endl;
     std::cout << "Difference of sets: " << differenceSet << std::endl;
     std::cout << "Intersection of sets: " << intersectionSet << std::endl;
-
 
     // Testing subset and superset
     if (set1 < set2) {
@@ -164,7 +163,6 @@ int main() {
     } else {
         std::cout << "Set 1 is neither a subset nor a superset of Set 2." << std::endl;
     }
-
 
     // Testing equality
     if (set1 == set2) {
